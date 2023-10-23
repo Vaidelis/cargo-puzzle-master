@@ -66,7 +66,8 @@ class ContainerController extends Controller {
         $amount_left = [];
         if(!empty($amount) && $amount['amount_left'] > 0)
         {
-            $lowest_amount = $this->fillRestContainer($amount, $package);
+            $amount_left = $this->fillRestContainer($amount, $package);
+            $lowest_amount = $this->lowestAmount($amount_left, $package);
             return $lowest_amount;
         }
         foreach ($containers as $key => $container)
@@ -78,7 +79,7 @@ class ContainerController extends Controller {
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
             if($amount_left[$key]['amount_left'] < 0)
             {
-                $amount_left[$key]['amount_left'] = 9999999;
+                $amount_left[$key]['amount_left'] = 9999999;//NEEDS FIX IF PRODUCT amount do not fit in both containers and both would be -(fillRestContainer method)
             }
             $amount_left[$key]['max_amount'] = $max_amount;
             $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
@@ -126,6 +127,6 @@ class ContainerController extends Controller {
         }
         $amount_left[$amount['container_key']]['max_amount'] = $max_amount;
 
-        return $this->lowestAmount($amount_left, $package);
+        return $amount_left;
     }
 }
