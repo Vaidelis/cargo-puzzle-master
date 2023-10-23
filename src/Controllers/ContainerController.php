@@ -48,20 +48,12 @@ class ContainerController extends Controller {
                 while($package['amount'] > 0)
                 {
                     $amount = $this->calculatePackageInContainer($containers, $package, $amount);
-                    if($amount['amount_left'] == 0)
-                    {
-                        $package['amount'] = $amount['amount_left'];
-                    }
-                    else
-                    {
-                        $package['amount'] = $package['amount'] -  $amount['amount_left'];
-                    }
                 }
             }
         }
     }
 
-    public function calculatePackageInContainer($containers, $package, $amount)
+    public function calculatePackageInContainer($containers, &$package, $amount)
     {
         $amount_left = [];
         if(!empty($amount) && $amount['amount_left'] > 0)
@@ -76,21 +68,34 @@ class ContainerController extends Controller {
             $fill_width = floor($container['width'] / $package['width']);
             $max_amount = $fill_length * $fill_height * $fill_width;
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
-
+            if($amount_left[$key]['amount_left'] < 0)
+            {
+                $amount_left[$key]['amount_left'] = 9999999;
+            }
+            $amount_left[$key]['max_amount'] = $max_amount;
             $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
         }
 
-        $lowest_amount = $this->lowestAmount($amount_left);
+        $lowest_amount = $this->lowestAmount($amount_left, $package);
 
         return $lowest_amount;
     }
 
-    public function lowestAmount($amount_left)
+    public function lowestAmount($amount_left, &$package)
     {
         $lowest_amount = min($amount_left);
+
         foreach ($amount_left as $key => $value) {
             if ($value['amount_left'] === $lowest_amount['amount_left']) {
                 $lowest_amount['container_key'] = $key;
+                if($value['max_amount'] < $package['amount'])
+                {
+                    $package['amount'] =  $package['amount'] - $value['max_amount'];
+                }
+                else
+                {
+                    $package['amount'] = 0;
+                }
                 break;
             }
         }
@@ -98,22 +103,21 @@ class ContainerController extends Controller {
         return $lowest_amount;
     }
 
-    public function fillRestContainer($amount, $package)
+    public function fillRestContainer($amount, &$package)
     {
         $max_amount = floor($amount['container_place_left'] / $package['length'] / $package['height'] / $package['width']);
         if($max_amount < $package['amount'])
         {
             $amount_left[$amount['container_key']]['amount_left'] = 0;
             $amount_left[$amount['container_key']]['container_place_left'] = 0;
-
-            $package['amount'] = $package['amount'] - $max_amount;
         }
         else
         {
-            $package['amount'] = 0;
             $amount_left[$amount['container_key']]['container_place_left'] = $amount['container_place_left'] - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
             $amount_left[$amount['container_key']]['amount_left'] = $max_amount - $package['amount'];
         }
-        return $this->lowestAmount($amount_left);
+        $amount_left[$amount['container_key']]['max_amount'] = $max_amount;
+
+        return $this->lowestAmount($amount_left, $package);
     }
 }
