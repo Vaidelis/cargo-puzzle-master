@@ -35,19 +35,27 @@ class ContainerController extends Controller {
         $transports = $_POST['transports'];
         $containers = $_POST['containers'];
         $amount = '';
+        $containers_for_products = [];
+        $times = 0;
 
         // Deserialize the data back to arrays
         $transports = json_decode($transports, true);
         $containers = json_decode($containers, true);
 
-        foreach ($transports as $transport)
+        foreach ($transports as $key => $transport)
         {
             $amount = '';
+            $times = 0;
             foreach ($transport['packages'] as &$package)
             {
                 while($package['amount'] > 0)
                 {
                     $amount = $this->calculatePackageInContainer($containers, $package, $amount);
+                    if($package['amount'] == 0)
+                    {
+                        $containers_for_products[$key][$times] = $amount['container_key'];
+                        $times++;
+                    }
                 }
             }
         }
