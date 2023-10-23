@@ -1,0 +1,9 @@
+{
+    "name": "vaida/cargo-puzzle-master",
+    "autoload": {
+        "psr-4": {
+            "Vaida\\CargoPuzzleMaster\\": "src/"
+        }
+    },
+    "require": {}
+}
