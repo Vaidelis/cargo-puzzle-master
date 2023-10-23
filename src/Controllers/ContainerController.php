@@ -38,7 +38,5 @@ class ContainerController extends Controller {
         // Deserialize the data back to arrays
         $transports = json_decode($transports, true);
         $containers = json_decode($containers, true);
-        echo 'test';
-
     }
 }
