@@ -16,6 +16,7 @@ class ContainerController extends Controller {
         $Transports = [
             new Transport([
                 new Package(27, 78, 79, 93),
+                //new Package(190, 78, 79, 93),
             ]),
             new Transport([
                 new Package(24, 30, 60, 90),
@@ -56,9 +57,16 @@ class ContainerController extends Controller {
                         $containers_for_products[$key][$times] = $amount['container_key'];
                         $times++;
                     }
+                    elseif($amount['amount_left'] < 0)
+                    {
+                        $containers_for_products[$key][$times] = $amount['container_key'];
+                        $times++;
+                        $amount = '';
+                    }
                 }
             }
         }
+        $this->displayCalculatedResults($containers_for_products, $transports, $containers);
     }
 
     public function calculatePackageInContainer($containers, &$package, $amount)
@@ -77,10 +85,10 @@ class ContainerController extends Controller {
             $fill_width = floor($container['width'] / $package['width']);
             $max_amount = $fill_length * $fill_height * $fill_width;
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
-            if($amount_left[$key]['amount_left'] < 0)
+           /* if($amount_left[$key]['amount_left'] < 0)
             {
                 $amount_left[$key]['amount_left'] = 9999999;//NEEDS FIX IF PRODUCT amount do not fit in both containers and both would be -(fillRestContainer method)
-            }
+            }*/
             $amount_left[$key]['max_amount'] = $max_amount;
             $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
         }
@@ -93,6 +101,27 @@ class ContainerController extends Controller {
     public function lowestAmount($amount_left, &$package)
     {
         $lowest_amount = min($amount_left);
+        if($lowest_amount['amount_left'] < 0)
+        {
+            foreach ($amount_left as $left)
+            {
+                if($left['amount_left'] > 0 && $left['amount_left'] < $lowest_amount['amount_left'])
+                {
+                    $lowest_amount = $left;
+                }
+            }
+
+        }
+        if($lowest_amount['amount_left'] < 0)
+        {
+            foreach ($amount_left as $left)
+            {
+                if($left['amount_left'] > $lowest_amount['amount_left'])
+                {
+                    $lowest_amount = $left;
+                }
+            }
+        }
 
         foreach ($amount_left as $key => $value) {
             if ($value['amount_left'] === $lowest_amount['amount_left']) {
@@ -128,5 +157,10 @@ class ContainerController extends Controller {
         $amount_left[$amount['container_key']]['max_amount'] = $max_amount;
 
         return $amount_left;
+    }
+
+    public function displayCalculatedResults($filled_containers, $transports, $containers)
+    {
+        $this->render('home/index', ['containers' => $containers, 'transports' => $transports]);
     }
 }
