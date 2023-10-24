@@ -12,9 +12,9 @@
 <table>
     <tr>
         <th>Name</th>
-        <th>Width</th>
-        <th>Height</th>
-        <th>Length</th>
+        <th>Width (cm)</th>
+        <th>Height (cm)</th>
+        <th>Length (cm)</th>
     </tr>
     <?php foreach ($containers as $container): ?>
     <tr>
@@ -31,9 +31,9 @@
 <table>
     <tr>
         <th>Amount</th>
-        <th>Width</th>
-        <th>Height</th>
-        <th>Length</th>
+        <th>Width (cm)</th>
+        <th>Height (cm)</th>
+        <th>Length (cm)</th>
     </tr>
     <?php foreach ($transport->packages as $package): ?>
         <tr>

@@ -12,9 +12,10 @@
     <table>
         <tr>
             <th>Container name</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th>Length</th>
+            <th>Width (cm)</th>
+            <th>Height (cm)</th>
+            <th>Length (cm)</th>
+            <th>Place filled (%)</th>
         </tr>
         <?php foreach ($containers as $container): ?>
             <tr>
@@ -22,6 +23,7 @@
                 <td><?= $container['width'] ?></td>
                 <td><?= $container['height'] ?></td>
                 <td><?= $container['length'] ?></td>
+                <td><?= $container['place_filled'] ?></td>
             </tr>
         <?php endforeach; ?>
     </table>

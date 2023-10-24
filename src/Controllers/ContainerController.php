@@ -64,16 +64,30 @@ class ContainerController extends Controller {
                 while($package['amount'] > 0)
                 {
                     $amount = $this->calculatePackageInContainer($containers, $package, $amount);
-                    if($package['amount'] == 0)
+                    $amount['container_place'] = $containers[$amount['container_key']]['width'] * $containers[$amount['container_key']]['height'] * $containers[$amount['container_key']]['length'];
+                    if($amount['amount_left'] > 0)
                     {
-                        $containers_for_products[$key][$times] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
+                    }
+                    elseif($package['amount'] == 0)
+                    {
+                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
                         $times++;
                     }
                     elseif($amount['amount_left'] < 0)
                     {
-                        $containers_for_products[$key][$times] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['place_filled'] = 100;
                         $times++;
                         $amount = '';
+                    }
+                    else
+                    {
+                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
+                        $containers_for_products[$key][$times]['place_filled'] = 100;
+                        $times++;
                     }
                 }
             }
@@ -107,7 +121,10 @@ class ContainerController extends Controller {
             $max_amount = $fill_length * $fill_height * $fill_width;
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
             $amount_left[$key]['max_amount'] = $max_amount;
-            $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
+            if(isset($amount_left[$key]['container_place_left']))
+                $amount_left[$key]['container_place_left'] = $amount_left[$key]['container_place_left'] - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
+            else
+                $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
         }
 
         $lowest_amount = $this->lowestAmount($amount_left, $package);
@@ -183,7 +200,8 @@ class ContainerController extends Controller {
         {
             foreach ($filled as $key2 => $filled_key)
             {
-                $containers_list[$key][$key2] = $containers[$filled_key];
+                $containers_list[$key][$key2] = $containers[$filled_key['container_key']];
+                $containers_list[$key][$key2]['place_filled'] = $filled_key['place_filled'];
             }
         }
         $this->render('home/CalculationResults', ['containers_list' => $containers_list]);
