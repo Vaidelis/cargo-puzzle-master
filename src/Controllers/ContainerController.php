@@ -107,7 +107,7 @@ class ContainerController extends Controller {
         return $containers_for_products;
     }
 
-    public function calculatePackageInContainer($containers, &$package, $amount)
+    private function calculatePackageInContainer($containers, &$package, $amount)
     {
         $amount_left = [];
 
@@ -139,7 +139,7 @@ class ContainerController extends Controller {
         return $lowest_amount;
     }
 
-    public function lowestAmount($amount_left, &$package)
+    private function lowestAmount($amount_left, &$package)
     {
         $lowest_amount = min($amount_left);
 
@@ -186,7 +186,7 @@ class ContainerController extends Controller {
         return $lowest_amount;
     }
 
-    public function fillRestContainer($amount, &$package)
+    private function fillRestContainer($amount, &$package)
     {
         $max_amount = floor($amount['container_place_left'] / $package['length'] / $package['height'] / $package['width']);
 
