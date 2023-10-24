@@ -56,36 +56,31 @@ class ContainerController extends Controller {
         foreach ($transports as $key => $transport)
         {
             $amount = '';
-            $times = 0;
+            $count = 0;
             foreach ($transport['packages'] as &$package)
             {
                 while($package['amount'] > 0)
                 {
                     $amount = $this->calculatePackageInContainer($containers, $package, $amount);
                     $amount['container_place'] = $containers[$amount['container_key']]['width'] * $containers[$amount['container_key']]['height'] * $containers[$amount['container_key']]['length'];
+                    $containers_for_products[$key][$count]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
+                    $containers_for_products[$key][$count]['container_key'] = $amount['container_key'];
                     if($amount['amount_left'] > 0)
                     {
-                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
-                        $containers_for_products[$key][$times]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
+                        continue;
                     }
                     elseif($package['amount'] == 0)
                     {
-                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
-                        $containers_for_products[$key][$times]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
-                        $times++;
+                        $count++;
                     }
                     elseif($amount['amount_left'] < 0)
                     {
-                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
-                        $containers_for_products[$key][$times]['place_filled'] = 100;
-                        $times++;
+                        $count++;
                         $amount = '';
                     }
                     else
                     {
-                        $containers_for_products[$key][$times]['container_key'] = $amount['container_key'];
-                        $containers_for_products[$key][$times]['place_filled'] = 100;
-                        $times++;
+                        $count++;
                     }
                 }
             }
