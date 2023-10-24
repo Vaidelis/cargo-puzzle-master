@@ -91,7 +91,7 @@ class ContainerController extends Controller {
 
         if(!empty($containers_for_products))
         {
-            $this->displayCalculatedResults($containers_for_products, $transports, $containers);
+            $this->displayCalculatedResults($containers_for_products, $containers);
         }
         else
         {
@@ -198,7 +198,7 @@ class ContainerController extends Controller {
         return $amount_left;
     }
 
-    public function displayCalculatedResults($filled_containers, $transports, $containers)
+    public function displayCalculatedResults($filled_containers, $containers)
     {
         $containers_list = [];
 
