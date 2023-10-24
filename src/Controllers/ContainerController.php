@@ -47,12 +47,27 @@ class ContainerController extends Controller {
     {
         $transports = $_POST['transports'];
         $containers = $_POST['containers'];
-        $containers_for_products = [];
 
         // Deserialize the data back to arrays
         $transports = json_decode($transports, true);
         $containers = json_decode($containers, true);
 
+        $filled_containers = $this->calculateFilledContainers($transports, $containers);
+
+        if(!empty($filled_containers))
+        {
+            $this->displayCalculatedResults($filled_containers, $containers);
+        }
+        else
+        {
+            $_SESSION['error'] = 'Containers are not filled with products';
+            $this->redirect('/');
+        }
+    }
+
+    private function calculateFilledContainers($transports, $containers)
+    {
+        $containers_for_products = [];
         foreach ($transports as $key => $transport)
         {
             $amount = '';
@@ -89,15 +104,7 @@ class ContainerController extends Controller {
             }
         }
 
-        if(!empty($containers_for_products))
-        {
-            $this->displayCalculatedResults($containers_for_products, $containers);
-        }
-        else
-        {
-            $_SESSION['error'] = 'Containers are not filled with products';
-            $this->redirect('/');
-        }
+        return $containers_for_products;
     }
 
     public function calculatePackageInContainer($containers, &$package, $amount)
@@ -158,7 +165,8 @@ class ContainerController extends Controller {
             }
         }
 
-        foreach ($amount_left as $key => $value) {
+        foreach ($amount_left as $key => $value)
+        {
             if ($value['amount_left'] === $lowest_amount['amount_left'])
             {
                 $lowest_amount['container_key'] = $key;
