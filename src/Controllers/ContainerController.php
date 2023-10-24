@@ -16,7 +16,6 @@ class ContainerController extends Controller {
         $Transports = [
             new Transport([
                 new Package(27, 78, 79, 93),
-                //new Package(190, 78, 79, 93),
             ]),
             new Transport([
                 new Package(24, 30, 60, 90),
@@ -161,6 +160,14 @@ class ContainerController extends Controller {
 
     public function displayCalculatedResults($filled_containers, $transports, $containers)
     {
-        $this->render('home/index', ['containers' => $containers, 'transports' => $transports]);
+        $containers_list = [];
+        foreach ($filled_containers as $key => $filled)
+        {
+            foreach ($filled as $key2 => $filled_key)
+            {
+                $containers_list[$key][$key2] = $containers[$filled_key];
+            }
+        }
+        $this->render('home/CalculationResults', ['containers_list' => $containers_list]);
     }
 }
