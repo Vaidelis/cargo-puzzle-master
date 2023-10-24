@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>Container List</h1>
+<?php if(isset($error)): ?>
+    <span><?=$error ?></span>
+<?php endif ?>
 <table>
     <tr>
         <th>Name</th>

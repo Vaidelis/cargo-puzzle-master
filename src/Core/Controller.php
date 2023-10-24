@@ -9,4 +9,9 @@ class Controller {
         $viewsPath = __DIR__ . '/../Views/';
         include $viewsPath . $view . '.php';
     }
+
+    protected function redirect($url) {
+        header("Location: $url");
+        exit();
+    }
 }

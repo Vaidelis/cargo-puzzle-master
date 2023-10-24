@@ -7,13 +7,26 @@ use Vaida\CargoPuzzleMaster\Models\Container;
 use Vaida\CargoPuzzleMaster\Models\Package;
 use Vaida\CargoPuzzleMaster\Models\Transport;
 
+session_start();
+
 class ContainerController extends Controller {
     public function index() {
-        $Containers = [
+
+        if (isset($_SESSION['error']))
+        {
+            $error = $_SESSION['error'];
+            unset($_SESSION['error']); // Clear the error message after displaying it
+        }
+        else
+        {
+            $error = '';
+        }
+
+        $containers = [
             new Container('40ft Standard Dry Container', 234.8, 238.44, 1203.1),
             new Container('10ft Standard Dry Container', 234.8, 238.44, 279.4)
         ];
-        $Transports = [
+        $transports = [
             new Transport([
                 new Package(27, 78, 79, 93),
             ]),
@@ -27,7 +40,7 @@ class ContainerController extends Controller {
             ]),
         ];
 
-        $this->render('home/index', ['containers' => $Containers, 'transports' => $Transports]);
+        $this->render('home/index', ['containers' => $containers, 'transports' => $transports, 'error' => $error]);
     }
 
     public function calculate()
@@ -65,7 +78,16 @@ class ContainerController extends Controller {
                 }
             }
         }
-        $this->displayCalculatedResults($containers_for_products, $transports, $containers);
+
+        if(!empty($containers_for_products))
+        {
+            $this->displayCalculatedResults($containers_for_products, $transports, $containers);
+        }
+        else
+        {
+            $_SESSION['error'] = 'Containers are not filled with products';
+            $this->redirect('/');
+        }
     }
 
     public function calculatePackageInContainer($containers, &$package, $amount)
@@ -84,10 +106,6 @@ class ContainerController extends Controller {
             $fill_width = floor($container['width'] / $package['width']);
             $max_amount = $fill_length * $fill_height * $fill_width;
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
-           /* if($amount_left[$key]['amount_left'] < 0)
-            {
-                $amount_left[$key]['amount_left'] = 9999999;//NEEDS FIX IF PRODUCT amount do not fit in both containers and both would be -(fillRestContainer method)
-            }*/
             $amount_left[$key]['max_amount'] = $max_amount;
             $amount_left[$key]['container_place_left'] = ($container['width'] * $container['height'] * $container['length']) - ($package['length'] * $package['height'] * $package['width'] * $package['amount']);
         }
