@@ -47,9 +47,7 @@ class ContainerController extends Controller {
     {
         $transports = $_POST['transports'];
         $containers = $_POST['containers'];
-        $amount = '';
         $containers_for_products = [];
-        $times = 0;
 
         // Deserialize the data back to arrays
         $transports = json_decode($transports, true);
