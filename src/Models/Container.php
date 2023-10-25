@@ -16,25 +16,4 @@ class Container
         $this->height = $height;
         $this->length = $length;
     }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    public function getLength()
-    {
-        return $this->length;
-    }
-
 }
