@@ -7,10 +7,11 @@
 </head>
 <body>
 <div class="container">
+    <h1>Containers and transports with packages list</h1>
 <?php if(isset($error)): ?>
     <span class="error-message"><?=$error ?></span>
 <?php endif ?>
-    <h1 class="table-text">Container List</h1>
+    <h1 class="table-text">Containers</h1>
 <table class="information-list">
     <tr>
         <th>Name</th>
@@ -53,6 +54,6 @@
     <input type="hidden" name="containers" value="<?= htmlspecialchars(json_encode($containers)) ?>">
     <input type="submit" name="calculate" value="Calculate">
 </form>
-</body>
 </div>
+</body>
 </html>
