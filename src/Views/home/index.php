@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Container List</title>
+    <link rel="stylesheet" type="text/css" href="../../../public/css/style.css">
 </head>
 <body>
-<h1>Container List</h1>
-<table>
+<div class="container">
+<?php if(isset($error)): ?>
+    <span class="error-message"><?=$error ?></span>
+<?php endif ?>
+    <h1 class="table-text">Container List</h1>
+<table class="information-list">
     <tr>
         <th>Name</th>
-        <th>Width</th>
-        <th>Height</th>
-        <th>Length</th>
+        <th>Width (cm)</th>
+        <th>Height (cm)</th>
+        <th>Length (cm)</th>
     </tr>
     <?php foreach ($containers as $container): ?>
     <tr>
@@ -24,13 +29,13 @@
 </table>
 
 <?php foreach ($transports as $key => $transport): ?>
-<h1>Transport <?= $key + 1 ?></h1>
-<table>
+<h1 class="table-text">Transport <?= $key + 1 ?></h1>
+<table class="information-list">
     <tr>
         <th>Amount</th>
-        <th>Width</th>
-        <th>Height</th>
-        <th>Length</th>
+        <th>Width (cm)</th>
+        <th>Height (cm)</th>
+        <th>Length (cm)</th>
     </tr>
     <?php foreach ($transport->packages as $package): ?>
         <tr>
@@ -43,10 +48,11 @@
 </table>
 <?php endforeach; ?>
 
-<form method="post" action="/calculate">
+<form class="button-place" method="post" action="/calculate">
     <input type="hidden" name="transports" value="<?= htmlspecialchars(json_encode($transports)) ?>">
     <input type="hidden" name="containers" value="<?= htmlspecialchars(json_encode($containers)) ?>">
     <input type="submit" name="calculate" value="Calculate">
 </form>
 </body>
+</div>
 </html>
