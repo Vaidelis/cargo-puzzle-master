@@ -78,25 +78,25 @@ class ContainerController extends Controller {
                 while($package['amount'] > 0)
                 {
                     $amount = $this->calculatePackageInContainer($containers, $package, $amount);
-
                     $amount['container_place'] = $containers[$amount['container_key']]['width'] * $containers[$amount['container_key']]['height'] * $containers[$amount['container_key']]['length'];
-                    $containers_for_products[$key][$count]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
+
+                    if($amount['container_place_left'] > 0)
+                        $containers_for_products[$key][$count]['place_filled'] = round((1 - $amount['container_place_left'] / $amount['container_place'])  * 100);
+                    else
+                        $containers_for_products[$key][$count]['place_filled'] = 100;
+
                     $containers_for_products[$key][$count]['container_key'] = $amount['container_key'];
 
-                    if($amount['amount_left'] > 0)
+                    if($amount['amount_left'] > 0) //if still place left in container we should fill rest container
                     {
                         continue;
                     }
-                    elseif($package['amount'] == 0)
-                    {
-                        $count++;
-                    }
-                    elseif($amount['amount_left'] < 0)
+                    elseif($amount['amount_left'] < 0) //this case show that container is filled but not all packages is added in container
                     {
                         $count++;
                         $amount = '';
                     }
-                    else
+                    else //this case if amount left is 0
                     {
                         $count++;
                     }
@@ -124,6 +124,7 @@ class ContainerController extends Controller {
             $fill_height = floor($container['height'] / $package['height']);
             $fill_width = floor($container['width'] / $package['width']);
 
+            //calculate max amount of packages to fill in container
             $max_amount = $fill_length * $fill_height * $fill_width;
             $amount_left[$key]['amount_left'] = $max_amount - $package['amount'];
             $amount_left[$key]['max_amount'] = $max_amount;
@@ -143,6 +144,7 @@ class ContainerController extends Controller {
     {
         $lowest_amount = min($amount_left);
 
+        //If packages amount is too much for each container
         if($lowest_amount['amount_left'] < 0)
         {
             foreach ($amount_left as $left)
@@ -152,7 +154,6 @@ class ContainerController extends Controller {
                     $lowest_amount = $left;
                 }
             }
-
         }
         if($lowest_amount['amount_left'] < 0)
         {
