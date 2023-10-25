@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Container List</title>
+    <link rel="stylesheet" type="text/css" href="../../../public/css/style.css">
 </head>
 <body>
-<h1>Used container list for each transport</h1>
+<div class="container">
+<h1>Used containers list for each transport</h1>
 
 <?php foreach ($containers_list as $key => $containers): ?>
-    <h1>Transport <?= $key + 1 ?></h1>
-    <table>
+    <h1 class="table-text">Transport <?= $key + 1 ?></h1>
+    <table class="information-list">
         <tr>
             <th>Container name</th>
             <th>Width (cm)</th>
@@ -28,5 +30,9 @@
         <?php endforeach; ?>
     </table>
 <?php endforeach; ?>
+    <div class="button-place">
+         <a class="back-button" href="/">Back</a>
+    </div>
+</div>
 </body>
 </html>

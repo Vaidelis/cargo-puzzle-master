@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+.container{
+    max-width: 1000px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.table-text {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+.information-list {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.information-list th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.information-list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.button-place{
+    text-align: center;
+    margin: 20px 0;
+}
+
+.button-place input[type="submit"],
+.back-button{
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button-place input[type="submit"]:hover,
+.back-button:hover{
+    background-color: #555;
+}
+
+.error-message {
+    color: red;
+}

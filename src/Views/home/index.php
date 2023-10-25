@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Container List</title>
+    <link rel="stylesheet" type="text/css" href="../../../public/css/style.css">
 </head>
 <body>
-<h1>Container List</h1>
+<div class="container">
 <?php if(isset($error)): ?>
-    <span><?=$error ?></span>
+    <span class="error-message"><?=$error ?></span>
 <?php endif ?>
-<table>
+    <h1 class="table-text">Container List</h1>
+<table class="information-list">
     <tr>
         <th>Name</th>
         <th>Width (cm)</th>
@@ -27,8 +29,8 @@
 </table>
 
 <?php foreach ($transports as $key => $transport): ?>
-<h1>Transport <?= $key + 1 ?></h1>
-<table>
+<h1 class="table-text">Transport <?= $key + 1 ?></h1>
+<table class="information-list">
     <tr>
         <th>Amount</th>
         <th>Width (cm)</th>
@@ -46,10 +48,11 @@
 </table>
 <?php endforeach; ?>
 
-<form method="post" action="/calculate">
+<form class="button-place" method="post" action="/calculate">
     <input type="hidden" name="transports" value="<?= htmlspecialchars(json_encode($transports)) ?>">
     <input type="hidden" name="containers" value="<?= htmlspecialchars(json_encode($containers)) ?>">
     <input type="submit" name="calculate" value="Calculate">
 </form>
 </body>
+</div>
 </html>
